@@ -3,23 +3,18 @@ pipeline {
 
     stages {
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Building Application...'
+                sh 'sudo docker build -t mywebsite:v1 .'
             }
         }
 
-        stage('Test') {
+        stage('Run Docker Container') {
             steps {
-                echo 'Testing Application...'
+                sh 'sudo docker stop mywebsite-container || true'
+                sh 'sudo docker rm mywebsite-container || true'
+                sh 'sudo docker run -d -p 8081:80 --name mywebsite-container mywebsite:v1'
             }
         }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying Application...'
-            }
-        }
-
     }
 }
